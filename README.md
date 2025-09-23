@@ -32,8 +32,9 @@ An **artificial neuron (perceptron)** has:
 - **Summation (Σ w·x + b)**  
 - **Activation function** → decides output  
 
-📌 Diagram (Neuron analogy):  
-![Neuron Analogy](https://miro.medium.com/v2/resize:fit:720/format:webp/1*ZDKuwZQzQ5d6gd0dfzpOwA.png)  
+📌 Diagram (Neuron analogy):   
+<img width="955" height="630" alt="image" src="https://github.com/user-attachments/assets/65067539-beb4-4682-82a0-41a4320874ce" />
+
 
 ---
 
@@ -42,7 +43,101 @@ An **artificial neuron (perceptron)** has:
 - **Input Layer** → receives data  
 - **Hidden Layers** → extract features  
 - **Output Layer** → gives predictions  
+🟢 Neural Network Architecture
 
+A Neural Network is made up of layers of neurons connected together. Each layer has a specific role.
+
+1. Input Layer
+
+This is the entry point of data into the network.
+
+Each neuron in the input layer represents one feature of the dataset.
+
+📌 Example: In digit recognition (MNIST):
+
+Input = 28×28 pixel image = 784 features.
+
+Input layer will have 784 neurons, one for each pixel.
+
+2. Hidden Layers
+
+Layers between input and output.
+
+They apply weights + activation functions to transform inputs into useful patterns.
+
+Each layer extracts higher-level features:
+
+First hidden layer might detect edges in an image.
+
+Next layers might detect shapes.
+
+Final layers might detect digits or objects.
+
+👉 More hidden layers = deeper network = Deep Learning.
+
+3. Output Layer
+
+Produces the final prediction.
+
+Number of neurons = number of classes/outputs.
+
+📌 Example:
+
+For MNIST digit recognition → 10 neurons (digits 0–9).
+
+Each neuron’s value = probability of that digit.
+
+📊 Diagram
+
+Here’s a simple 3-layer neural network (Input → Hidden → Output):
+
+         Input Layer (784 neurons for MNIST)
+                ●   ●   ●   ●   ● ...  
+                 \  |   / \   |  /
+                  \ |  /   \  | /
+                  Hidden Layer (128 neurons, ReLU)
+                    ● ● ● ● ● ● ● ● ...
+                       \   |   /
+                        \  |  /
+                        Output Layer (10 neurons, Softmax)
+                        [0][1][2]...[9]
+
+
+Input Layer → 784 pixels
+
+Hidden Layer → 128 neurons with ReLU activation
+
+Output Layer → 10 neurons with Softmax activation (probabilities for each digit)
+
+🔹 Example in Keras (MNIST)
+```python
+import tensorflow as tf
+from tensorflow.keras import layers
+
+# Build a simple NN for MNIST digit classification
+model = tf.keras.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden Layer
+    layers.Dense(10, activation='softmax')                     # Output Layer
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Load MNIST data
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+x_train = x_train.reshape(-1, 784).astype("float32") / 255
+x_test = x_test.reshape(-1, 784).astype("float32") / 255
+
+# Train
+model.fit(x_train, y_train, epochs=3, validation_data=(x_test, y_test))
+
+```
+📌 Output:
+
+The network learns to recognize digits 0–9.
+
+Accuracy after training (3 epochs) ≈ 97%.
 📌 Example: Handwritten Digit Recognition (MNIST)  
 
 ![Neural Network](https://www.researchgate.net/profile/Dimitrios-Kolovos/publication/324532215/figure/fig1/AS:618216982552577@1523641469850/A-simple-artificial-neural-network-with-two-hidden-layers.png)  
