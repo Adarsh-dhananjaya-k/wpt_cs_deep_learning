@@ -100,28 +100,59 @@ Output Layer → 10 neurons with Softmax activation (probabilities for each digi
 
 🔹 Example in Keras (MNIST)
 ```python
+# --- Setup & Training ---
 import tensorflow as tf
-from tensorflow.keras import layers
+from tensorflow.keras import layers, models
 
-# Build a simple NN for MNIST digit classification
-model = tf.keras.Sequential([
-    layers.Dense(128, activation='relu', input_shape=(784,)),  # Hidden Layer
-    layers.Dense(10, activation='softmax')                     # Output Layer
+# Load MNIST dataset
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Flatten (28x28 -> 784), cast to float32, normalize 0..1
+x_train = x_train.reshape(-1, 784).astype("float32") / 255.0
+x_test  = x_test.reshape(-1, 784).astype("float32") / 255.0
+
+# Simple MLP model
+model = models.Sequential([
+    tf.keras.Input(shape=(784,)),         # explicit Input layer (avoids warnings)
+    layers.Dense(128, activation="relu"),
+    layers.Dense(10, activation="softmax")
 ])
 
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
 
-# Load MNIST data
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-x_train = x_train.reshape(-1, 784).astype("float32") / 255
-x_test = x_test.reshape(-1, 784).astype("float32") / 255
+history = model.fit(
+    x_train, y_train,
+    epochs=3, batch_size=128,
+    validation_data=(x_test, y_test)
+)
 
-# Train
-model.fit(x_train, y_train, epochs=3, validation_data=(x_test, y_test))
+test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
+print(f"✅ Test accuracy: {test_acc:.4f}")
 
 ```
+
+
+#### Quick Visual Check (Predict a few test images)
+```python
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+preds = model.predict(x_test[:12], verbose=0)
+y_pred = np.argmax(preds, axis=1)
+
+plt.figure(figsize=(10,3))
+for i in range(12):
+    plt.subplot(2,6,i+1)
+    plt.imshow(x_test[i].reshape(28,28), cmap="gray")
+    plt.title(f"Pred: {y_pred[i]}")
+    plt.axis("off")
+plt.suptitle("Sanity check on MNIST test samples")
+plt.show()
+````
+
 📌 Output:
 
 The network learns to recognize digits 0–9.
@@ -141,8 +172,13 @@ Accuracy after training (3 epochs) ≈ 97%.
 3. Passed through an **activation function**.  
 4. Output flows forward until the final prediction.  
 
+
+![forward_propagation](https://github.com/user-attachments/assets/1e2608e1-1874-4621-be2b-50d6ec307ab3)
+
 📌 Formula:  
-\[ y = f(\sum (w_i \cdot x_i) + b) \]  
+<img width="249" height="69" alt="image" src="https://github.com/user-attachments/assets/13d8ff00-d17e-4a23-9b5e-ff5bc8d05138" />
+
+ 
 
 ---
 
@@ -151,6 +187,9 @@ Accuracy after training (3 epochs) ≈ 97%.
 Activation functions decide how signals move forward.  
 
 ### (a) Sigmoid  
+
+<img width="208" height="90" alt="image" src="https://github.com/user-attachments/assets/476ab3f8-a821-4ce5-ab16-b4269bb8298a" />
+
 \[ f(x) = \frac{1}{1+e^{-x}} \]  
 Range: (0,1) → Good for probabilities.  
 
@@ -158,6 +197,8 @@ Range: (0,1) → Good for probabilities.
 Range: (-1,1) → Better than sigmoid for centered data.  
 
 ### (c) ReLU (Rectified Linear Unit)  
+<img width="169" height="54" alt="image" src="https://github.com/user-attachments/assets/c6637ec9-cd61-4927-890e-890ce9e115b9" />
+
 \[ f(x) = \max(0, x) \]  
 Most commonly used in Deep Learning.  
 
