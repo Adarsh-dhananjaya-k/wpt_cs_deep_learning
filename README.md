@@ -43,52 +43,41 @@ An **artificial neuron (perceptron)** has:
 - **Input Layer** → receives data  
 - **Hidden Layers** → extract features  
 - **Output Layer** → gives predictions  
-🟢 Neural Network Architecture
+ 
 
 A Neural Network is made up of layers of neurons connected together. Each layer has a specific role.
 
-1. Input Layer
-
+ - ### 1. Input Layer
+---
 This is the entry point of data into the network.
-
 Each neuron in the input layer represents one feature of the dataset.
 
 📌 Example: In digit recognition (MNIST):
-
 Input = 28×28 pixel image = 784 features.
-
 Input layer will have 784 neurons, one for each pixel.
 
-2. Hidden Layers
-
+- ### 2. Hidden Layers
+---
 Layers between input and output.
-
 They apply weights + activation functions to transform inputs into useful patterns.
-
 Each layer extracts higher-level features:
-
 First hidden layer might detect edges in an image.
-
 Next layers might detect shapes.
-
 Final layers might detect digits or objects.
-
 👉 More hidden layers = deeper network = Deep Learning.
 
-3. Output Layer
-
+- ### 3. Output Layer
+---
 Produces the final prediction.
-
 Number of neurons = number of classes/outputs.
 
 📌 Example:
 
 For MNIST digit recognition → 10 neurons (digits 0–9).
-
 Each neuron’s value = probability of that digit.
 
-📊 Diagram
-
+ - ### 📊 Diagram
+---
 Here’s a simple 3-layer neural network (Input → Hidden → Output):
 
          Input Layer (784 neurons for MNIST)
@@ -140,7 +129,8 @@ The network learns to recognize digits 0–9.
 Accuracy after training (3 epochs) ≈ 97%.
 📌 Example: Handwritten Digit Recognition (MNIST)  
 
-![Neural Network](https://www.researchgate.net/profile/Dimitrios-Kolovos/publication/324532215/figure/fig1/AS:618216982552577@1523641469850/A-simple-artificial-neural-network-with-two-hidden-layers.png)  
+ <img width="1400" height="925" alt="image" src="https://github.com/user-attachments/assets/13966d68-5aa3-44ce-8cc5-01f846eac8e7" />
+
 
 ---
 
