@@ -413,7 +413,7 @@ print("Gradient at x=2:", df(2.0))
 Keras is a high-level deep learning API that makes building neural networks easy.
 It runs on top of TensorFlow and provides clean abstractions to define and train models.
 
-###🔹 Types of APIs in Keras
+### 🔹 Types of APIs in Keras
 #### 1. Sequential API (Beginner-Friendly)
 
 The simplest way to build a model.
@@ -516,3 +516,338 @@ model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
 ```
 
 
+
+🟢 Building Neural Networks with Keras
+---
+
+Now that we know about Keras APIs and layers, let’s build a complete neural network step by step using the MNIST dataset (handwritten digits).
+
+-🔹 Step 1: Import Libraries
+
+```
+import tensorflow as tf
+from tensorflow.keras import Sequential, layers, datasets
+```
+
+-🔹 Step 2: Load the Dataset
+
+We’ll use the MNIST dataset (60,000 training images + 10,000 test images).
+
+```
+(x_train, y_train), (x_test, y_test) = datasets.mnist.load_data()
+
+print("Training data shape:", x_train.shape)
+print("Test data shape:", x_test.shape)
+
+```
+
+-🔹 Step 3: Preprocess the Data
+Flatten images (28×28 → 784).
+Normalize pixel values (0–255 → 0–1).
+
+```
+x_train = x_train.reshape(-1, 784).astype("float32") / 255
+x_test  = x_test.reshape(-1, 784).astype("float32") / 255
+```
+-🔹 Step 4: Build the Model
+
+We’ll use a Sequential model with:
+Input Layer → 784 neurons
+Hidden Layers → 128 + 64 neurons (ReLU)
+Output Layer → 10 neurons (Softmax)
+
+```
+model = Sequential([
+    layers.Dense(128, activation="relu", input_shape=(784,)),
+    layers.Dense(64, activation="relu"),
+    layers.Dense(10, activation="softmax")
+])
+
+```
+-🔹 Step 5: Compile the Model
+
+Choose:
+Optimizer → Adam (fast + popular)
+Loss Function → Sparse Categorical Crossentropy (multi-class classification)
+
+Metrics → Accuracy
+
+```
+model.compile(
+    optimizer="adam",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+```
+-🔹 Step 6: Train the Model
+
+```
+history = model.fit(
+    x_train, y_train,
+    epochs=5,
+    batch_size=128,
+    validation_data=(x_test, y_test)
+)
+
+```
+
+Output will show training accuracy and validation accuracy improving over epochs.
+
+-🔹 Step 7: Evaluate the Model
+
+```
+test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
+print("✅ Test Accuracy:", test_acc)
+
+```
+
+Typical accuracy ~ 97–98% after 5 epochs.
+
+-🔹 Step 8: Make Predictions
+
+```
+import numpy as np
+
+predictions = model.predict(x_test[:5])
+for i, pred in enumerate(predictions):
+    print("Image", i, "→ Predicted:", np.argmax(pred), "| True:", y_test[i])
+
+```
+-🔹 Visualization of Predictions
+```import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10,3))
+for i in range(5):
+    plt.subplot(1,5,i+1)
+    plt.imshow(x_test[i].reshape(28,28), cmap="gray")
+    plt.title(f"Pred: {np.argmax(predictions[i])}")
+    plt.axis("off")
+plt.show()
+
+```
+
+🟢 TensorFlow & TensorBoard Setup
+---
+TensorFlow is the engine that runs deep learning models, and TensorBoard is its built-in tool to visualize training progress (loss, accuracy, graphs).
+
+-🔹 Installing TensorFlow
+
+In Google Colab, TensorFlow is already installed.
+If running locally:
+```
+pip install tensorflow
+```
+-🔹 Verifying Installation
+
+```
+import tensorflow as tf
+print("TensorFlow version:", tf.__version__)
+print("GPU available:", tf.config.list_physical_devices("GPU"))
+```
+🔹 Training a Model with TensorBoard Logging
+
+TensorBoard records training metrics using a log directory.
+```
+import datetime
+from tensorflow.keras import datasets, layers, Sequential
+
+# Load dataset
+(x_train, y_train), (x_test, y_test) = datasets.mnist.load_data()
+x_train = x_train.reshape(-1, 784).astype("float32") / 255
+x_test  = x_test.reshape(-1, 784).astype("float32") / 255
+
+# Build model
+model = Sequential([
+    layers.Dense(128, activation="relu", input_shape=(784,)),
+    layers.Dense(10, activation="softmax")
+])
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
+
+# Create log directory
+log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
+# Train model with TensorBoard
+model.fit(x_train, y_train, epochs=5,
+          validation_data=(x_test, y_test),
+          callbacks=[tensorboard_callback])
+```
+🔹 Launch TensorBoard in Colab
+```
+%load_ext tensorboard
+%tensorboard --logdir logs/fit
+```
+
+
+🟢 Natural Language Processing (NLP) Basics
+---
+
+Natural Language Processing (NLP) is a field of AI that enables computers to understand, interpret, and generate human language.
+It is widely used in chatbots, translation, sentiment analysis, and search engines.
+
+### 🔹 Key Preprocessing Steps in NLP
+
+Before text can be used in a neural network, it must be cleaned and converted into numerical form.
+
+- 1. Tokenization
+Breaking text into smaller units (words or sentences).
+
+📌 Example:
+``` python
+from nltk.tokenize import word_tokenize, sent_tokenize
+import nltk
+nltk.download("punkt")
+
+text = "Deep Learning is amazing. NLP makes machines understand language."
+print("Word Tokenization:", word_tokenize(text))
+print("Sentence Tokenization:", sent_tokenize(text))
+```
+
+- 2. Normalization
+
+Standardizing text into a consistent form.
+ - Lowercasing
+ - Removing punctuation/numbers
+ - Lemmatization/Stemming
+
+📌 Example (Lemmatization):
+```
+from nltk.stem import WordNetLemmatizer
+nltk.download("wordnet")
+
+lemmatizer = WordNetLemmatizer()
+words = ["running", "flies", "better"]
+
+print([lemmatizer.lemmatize(w, pos="v") for w in words])
+```
+
+Output:
+```
+['run', 'fly', 'better']
+```
+- 3. Stop Word Removal
+
+Stop words = very common words (the, is, in, and…) that don’t carry much meaning.
+
+📌 Example:
+```
+from nltk.corpus import stopwords
+nltk.download("stopwords")
+
+text = "Deep learning is a part of machine learning"
+words = word_tokenize(text)
+filtered = [w for w in words if w.lower() not in stopwords.words("english")]
+
+print("Without stopwords:", filtered)
+```
+
+Output:
+```
+['Deep', 'learning', 'part', 'machine', 'learning']
+```
+- 4. Vectorization
+
+Convert text into numbers so ML models can understand.
+ - Bag of Words (BoW)
+ - TF-IDF (Term Frequency–Inverse Document Frequency)
+ - Word Embeddings (Word2Vec, GloVe, BERT)
+
+📌 Example: TF-IDF
+```
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+corpus = [
+    "Deep learning is amazing",
+    "Natural language processing is powerful",
+    "Deep learning powers NLP"
+]
+
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(corpus)
+
+print("Vocabulary:", vectorizer.get_feature_names_out())
+print("TF-IDF Matrix:\n", X.toarray())
+```
+
+
+🟢 NLP Application: Sentiment Analysis (Text Classification)
+---
+Now that we know how to preprocess text (tokenization, normalization, stop word removal, vectorization), let’s apply NLP to a real task → Sentiment Analysis.
+
+- 🔹 What is Sentiment Analysis?
+
+A classification problem where we determine if a piece of text is positive, negative, or neutral.
+Widely used in:
+Customer reviews (Amazon, Flipkart, etc.)
+Social media analysis (Twitter, Facebook)
+Chatbots & feedback systems
+
+- 🔹 Approach 1: Using TF-IDF + Logistic Regression
+```
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+# Sample dataset
+texts = [
+    "I love this product, it is amazing!",
+    "Worst purchase ever, very disappointed.",
+    "Absolutely fantastic service and quality",
+    "Terrible experience, I hate it",
+    "Not bad, could be better"
+]
+labels = [1, 0, 1, 0, 1]  # 1 = Positive, 0 = Negative
+
+# Convert text to TF-IDF features
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(texts)
+
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2, random_state=42)
+
+# Train classifier
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+
+# Test prediction
+print("Prediction:", clf.predict(X_test))
+print("True Labels:", y_test)
+```
+
+- 🔹 Approach 2: Using Pretrained Transformer (HuggingFace)
+```
+!pip install transformers --quiet
+from transformers import pipeline
+
+# Load pretrained sentiment-analysis model
+classifier = pipeline("sentiment-analysis")
+
+print(classifier("I absolutely loved this movie!"))
+print(classifier("This was the worst experience ever."))
+```
+
+Output:
+
+```
+[{'label': 'POSITIVE', 'score': 0.9998}]
+[{'label': 'NEGATIVE', 'score': 0.9997}]
+```
+
+- 🔹 Visualizing Predictions
+
+```
+reviews = [
+    "The phone battery life is great",
+    "The screen cracked within a week",
+    "Customer support was very helpful",
+    "I will never buy from here again"
+]
+
+results = classifier(reviews)
+
+for review, res in zip(reviews, results):
+    print(f"{review} → {res['label']} ({res['score']:.2f})")
+```
