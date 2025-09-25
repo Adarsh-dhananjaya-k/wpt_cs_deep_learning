@@ -185,6 +185,16 @@ Accuracy after training (3 epochs) ≈ 97%.
 ## 🟢 5. Activation Functions  
 
 Activation functions decide how signals move forward.  
+An activation function decides whether a neuron should “fire” (pass its signal forward) or not.
+Without activation functions, neural networks would just be linear equations and could not learn complex patterns like images, speech, or language.
+
+🔹 Why Do We Need Activation Functions?
+
+Introduce non-linearity → allows the network to learn complex decision boundaries.
+
+Normalize neuron outputs into a useful range (like 0–1).
+
+Help in gradient flow during backpropagation.
 
 ### (a) Sigmoid  
 
@@ -195,6 +205,8 @@ Range: (0,1) → Good for probabilities.
 
 ### (b) Tanh  
 Range: (-1,1) → Better than sigmoid for centered data.  
+<img width="211" height="67" alt="image" src="https://github.com/user-attachments/assets/da1a366b-c096-4056-80e5-b4dc90446f43" />
+
 
 ### (c) ReLU (Rectified Linear Unit)  
 <img width="169" height="54" alt="image" src="https://github.com/user-attachments/assets/c6637ec9-cd61-4927-890e-890ce9e115b9" />
@@ -204,6 +216,8 @@ Most commonly used in Deep Learning.
 
 ### (d) Leaky ReLU  
 Fixes “dead neurons” problem by allowing small negative slope.  
+<img width="290" height="111" alt="image" src="https://github.com/user-attachments/assets/b268bc5c-399e-426b-8523-9df78874945f" />
+
 
 🔹 **Code: Visualize Activation Functions**  
 ```python
