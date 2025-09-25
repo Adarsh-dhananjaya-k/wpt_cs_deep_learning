@@ -249,6 +249,19 @@ plt.show()
 
 - Measures difference between **predicted output vs actual output**.  
 - Example: **Mean Squared Error (MSE)**  
+A Cost Function (also called Loss Function) measures how far off the model’s predictions are from the actual (true) values.
+
+<img width="304" height="93" alt="image" src="https://github.com/user-attachments/assets/c68cc64a-f59c-4d25-aa9f-ccfcfade3c12" />
+
+```python
+import numpy as np
+
+y_true = np.array([1.5, 2.0, 3.5])
+y_pred = np.array([1.4, 2.3, 3.0])
+
+mse = np.mean((y_true - y_pred)**2)
+print("MSE:", mse)
+```
 
 \[ MSE = \frac{1}{n}\sum(y_{true} - y_{pred})^2 \]  
 
@@ -320,13 +333,186 @@ model.fit(X, y, epochs=100, verbose=0)
 print("Predictions:", model.predict(X))
 ```
 
-📌 This trains a neural network to learn the **XOR problem**.  
 
+
+🔹 Popular Deep Learning Frameworks
 ---
+### 1. TensorFlow
 
-# ✅ Summary  
+Developed by Google.
 
-- Deep Learning uses **multi-layer neural networks**.  
-- **Neurons** take weighted inputs, apply activation, and pass outputs.  
-- Training uses **loss functions + gradient descent**.  
-- **Keras/TensorFlow** makes it easy to build models.  
+Supports both low-level operations (TensorFlow Core) and high-level APIs (Keras).
+
+Built-in support for TensorBoard (visualization).
+
+Strong for production deployment (e.g., TensorFlow Lite for mobile, TensorFlow Serving for cloud).
+
+📌 Example:
+```python
+import tensorflow as tf
+
+a = tf.constant(2)
+b = tf.constant(3)
+print("TensorFlow Addition:", a+b)
+```
+### 2. Keras
+
+High-level API built on top of TensorFlow.
+Focused on simplicity and rapid prototyping.
+Ideal for beginners and quick model development.
+
+📌 Example:
+```pyhton
+from tensorflow.keras import layers, models
+
+model = models.Sequential([
+    layers.Dense(64, activation="relu", input_shape=(100,)),
+    layers.Dense(10, activation="softmax")
+])
+```
+### 3. PyTorch
+
+Developed by Facebook (Meta AI).
+Dynamic computation graph → more flexible and Pythonic.
+Very popular in research.
+Strong ecosystem: torchvision, torchaudio, torchtext.
+
+📌 Example:
+``` python
+import torch
+
+x = torch.tensor([2.0], requires_grad=True)
+y = x**2 + 3*x + 2
+y.backward()
+print("Gradient:", x.grad)
+```
+### 4. MXNet
+
+Backed by Apache.
+Scalable, supports multiple languages (Python, R, Scala).
+Used by Amazon (AWS Deep Learning AMIs).
+
+### 5. JAX
+
+Developed by Google Research.
+Combines NumPy syntax + automatic differentiation + XLA compiler.
+Very fast, often used for cutting-edge ML research.
+
+📌 Example:
+```python
+import jax.numpy as jnp
+from jax import grad
+
+f = lambda x: x**2 + 3*x + 2
+df = grad(f)
+print("Gradient at x=2:", df(2.0))
+```
+
+🟢 Keras Layers and APIs
+---
+Keras is a high-level deep learning API that makes building neural networks easy.
+It runs on top of TensorFlow and provides clean abstractions to define and train models.
+
+###🔹 Types of APIs in Keras
+#### 1. Sequential API (Beginner-Friendly)
+
+The simplest way to build a model.
+
+Layers are stacked one after another.
+
+Good for feedforward networks.
+
+📌 Example:
+``` python
+from tensorflow.keras import Sequential, layers
+
+# Simple feedforward model
+model = Sequential([
+    layers.Dense(128, activation="relu", input_shape=(784,)),  # Hidden layer
+    layers.Dense(64, activation="relu"),                       # Hidden layer
+    layers.Dense(10, activation="softmax")                     # Output layer
+])
+```
+#### 2. Functional API (Flexible)
+
+Used for more complex models (multi-input, multi-output, branching).
+Layers are treated as functions applied to tensors.
+
+📌 Example:
+``` python
+from tensorflow.keras import Model, Input, layers
+
+inputs = Input(shape=(784,))
+x = layers.Dense(128, activation="relu")(inputs)
+x = layers.Dense(64, activation="relu")(x)
+outputs = layers.Dense(10, activation="softmax")(x)
+
+model = Model(inputs=inputs, outputs=outputs)
+```
+
+### 3. Model Subclassing (Advanced)
+
+Allows full control by subclassing the Model class.
+Useful for research and custom training loops.
+
+📌 Example:
+```python
+from tensorflow.keras import Model, layers
+
+class MyModel(Model):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.d1 = layers.Dense(128, activation="relu")
+        self.d2 = layers.Dense(64, activation="relu")
+        self.out = layers.Dense(10, activation="softmax")
+
+    def call(self, x):
+        x = self.d1(x)
+        x = self.d2(x)
+        return self.out(x)
+
+model = MyModel()
+```
+###🔹 Commonly Used Keras Layers
+
+- Dense (Fully Connected Layer)
+```python 
+layers.Dense(64, activation="relu")
+
+```
+Fully connected neurons, most common layer.
+
+- Dropout (reduce overfitting)
+```
+layers.Dropout(0.5)
+```
+
+- Conv2D (for images)
+```
+layers.Conv2D(32, (3,3), activation="relu")
+```
+
+LSTM / GRU (for sequences, NLP)
+```
+layers.LSTM(64)
+```
+
+Flatten (convert 2D → 1D)
+```
+layers.Flatten()
+```
+🔹 Model Compilation & Training
+---
+```
+model.compile(
+    optimizer="adam",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+# Train
+model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+
+```
+
+
