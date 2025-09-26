@@ -498,12 +498,12 @@ layers.LSTM(64)
 ```
 
 Flatten (convert 2D → 1D)
-```
+```python
 layers.Flatten()
 ```
 🔹 Model Compilation & Training
 ---
-```
+```python
 model.compile(
     optimizer="adam",
     loss="sparse_categorical_crossentropy",
@@ -524,7 +524,7 @@ Now that we know about Keras APIs and layers, let’s build a complete neural ne
 
 -🔹 Step 1: Import Libraries
 
-```
+```python
 import tensorflow as tf
 from tensorflow.keras import Sequential, layers, datasets
 ```
@@ -533,7 +533,7 @@ from tensorflow.keras import Sequential, layers, datasets
 
 We’ll use the MNIST dataset (60,000 training images + 10,000 test images).
 
-```
+```python
 (x_train, y_train), (x_test, y_test) = datasets.mnist.load_data()
 
 print("Training data shape:", x_train.shape)
@@ -545,7 +545,7 @@ print("Test data shape:", x_test.shape)
 Flatten images (28×28 → 784).
 Normalize pixel values (0–255 → 0–1).
 
-```
+```python
 x_train = x_train.reshape(-1, 784).astype("float32") / 255
 x_test  = x_test.reshape(-1, 784).astype("float32") / 255
 ```
@@ -556,7 +556,7 @@ Input Layer → 784 neurons
 Hidden Layers → 128 + 64 neurons (ReLU)
 Output Layer → 10 neurons (Softmax)
 
-```
+```python
 model = Sequential([
     layers.Dense(128, activation="relu", input_shape=(784,)),
     layers.Dense(64, activation="relu"),
@@ -572,7 +572,7 @@ Loss Function → Sparse Categorical Crossentropy (multi-class classification)
 
 Metrics → Accuracy
 
-```
+```pyhton
 model.compile(
     optimizer="adam",
     loss="sparse_categorical_crossentropy",
@@ -582,7 +582,7 @@ model.compile(
 ```
 -🔹 Step 6: Train the Model
 
-```
+```python
 history = model.fit(
     x_train, y_train,
     epochs=5,
@@ -596,7 +596,7 @@ Output will show training accuracy and validation accuracy improving over epochs
 
 -🔹 Step 7: Evaluate the Model
 
-```
+``` python
 test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
 print("✅ Test Accuracy:", test_acc)
 
@@ -606,7 +606,7 @@ Typical accuracy ~ 97–98% after 5 epochs.
 
 -🔹 Step 8: Make Predictions
 
-```
+``` python
 import numpy as np
 
 predictions = model.predict(x_test[:5])
@@ -615,7 +615,8 @@ for i, pred in enumerate(predictions):
 
 ```
 -🔹 Visualization of Predictions
-```import matplotlib.pyplot as plt
+``` python
+import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10,3))
 for i in range(5):
@@ -635,12 +636,12 @@ TensorFlow is the engine that runs deep learning models, and TensorBoard is its 
 
 In Google Colab, TensorFlow is already installed.
 If running locally:
-```
+``` python
 pip install tensorflow
 ```
 -🔹 Verifying Installation
 
-```
+```python
 import tensorflow as tf
 print("TensorFlow version:", tf.__version__)
 print("GPU available:", tf.config.list_physical_devices("GPU"))
@@ -648,7 +649,7 @@ print("GPU available:", tf.config.list_physical_devices("GPU"))
 🔹 Training a Model with TensorBoard Logging
 
 TensorBoard records training metrics using a log directory.
-```
+``` python
 import datetime
 from tensorflow.keras import datasets, layers, Sequential
 
@@ -714,7 +715,7 @@ Standardizing text into a consistent form.
  - Lemmatization/Stemming
 
 📌 Example (Lemmatization):
-```
+``` python
 from nltk.stem import WordNetLemmatizer
 nltk.download("wordnet")
 
@@ -733,7 +734,7 @@ Output:
 Stop words = very common words (the, is, in, and…) that don’t carry much meaning.
 
 📌 Example:
-```
+``` python
 from nltk.corpus import stopwords
 nltk.download("stopwords")
 
@@ -756,7 +757,7 @@ Convert text into numbers so ML models can understand.
  - Word Embeddings (Word2Vec, GloVe, BERT)
 
 📌 Example: TF-IDF
-```
+```python
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 corpus = [
@@ -786,7 +787,7 @@ Social media analysis (Twitter, Facebook)
 Chatbots & feedback systems
 
 - 🔹 Approach 1: Using TF-IDF + Logistic Regression
-```
+```python
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -818,7 +819,7 @@ print("True Labels:", y_test)
 ```
 
 - 🔹 Approach 2: Using Pretrained Transformer (HuggingFace)
-```
+```python
 !pip install transformers --quiet
 from transformers import pipeline
 
@@ -838,7 +839,7 @@ Output:
 
 - 🔹 Visualizing Predictions
 
-```
+```python
 reviews = [
     "The phone battery life is great",
     "The screen cracked within a week",
