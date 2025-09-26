@@ -275,6 +275,13 @@ print("MSE:", mse)
 📌 Formula:  
 \[ w = w - \eta \cdot \frac{\partial L}{\partial w} \]  
 
+<img width="840" height="188" alt="image" src="https://github.com/user-attachments/assets/ad52269f-5531-4b5c-ae44-70dd72085815" />
+
+<img width="417" height="131" alt="image" src="https://github.com/user-attachments/assets/16e259e8-138b-479c-a4e8-a7bfdac34d16" />
+
+<img width="723" height="492" alt="image" src="https://github.com/user-attachments/assets/3e59823f-20fb-4916-bcea-6a400ab73be4" />
+
+
 Where:  
 - \( w \) = weights  
 - \( \eta \) = learning rate  
